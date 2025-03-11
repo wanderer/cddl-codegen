@@ -56,7 +56,8 @@
 
           postInstall = ''
             wrapProgram $out/bin/cddl-codegen \
-              --set PATH ${pkgs.lib.makeBinPath [pkgs.rustfmt pkgs.which]}
+              --set PATH ${pkgs.lib.makeBinPath [pkgs.rustfmt pkgs.which]} \
+              --add-flags "--static-dir ${./static}"
           '';
 
           meta = with pkgs.lib; {
