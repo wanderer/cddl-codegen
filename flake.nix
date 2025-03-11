@@ -29,6 +29,8 @@
           rustToolchain
           pkg-config
           which
+          rustfmt
+          makeWrapper
         ];
       in {
         devShells.default = pkgs.mkShell {
@@ -40,6 +42,8 @@
           version = "0.1.0";
           src = ./.;
 
+          inherit nativeBuildInputs;
+
           cargoLock = {
             lockFile = ./Cargo.lock;
             allowBuiltinFetchGit = true;
@@ -50,7 +54,10 @@
             cargo test comment_ast
           '';
 
-          inherit nativeBuildInputs;
+          postInstall = ''
+            wrapProgram $out/bin/cddl-codegen \
+              --set PATH ${pkgs.lib.makeBinPath [pkgs.rustfmt pkgs.which]}
+          '';
 
           meta = with pkgs.lib; {
             description = "Codegen serialization logic for CBOR automatically from a CDDL specification";
